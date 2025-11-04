@@ -71,6 +71,11 @@ move /y "%TMP_FILE%" "%REQ_FILE%" >nul
 echo setuptools>>"%REQ_FILE%"
 echo wheel>>"%REQ_FILE%"
 
+REM === Dependências obrigatórias extras (sempre adicionadas) ===
+for %%P in (openpyxl) do (
+    findstr /ix "%%P" "%REQ_FILE%" >nul || echo %%P>>"%REQ_FILE%"
+)
+
 echo [OK] requirements.txt gerado com sucesso.
 echo Local: %REQ_FILE%
 echo.
