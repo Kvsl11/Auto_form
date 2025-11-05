@@ -1,15 +1,36 @@
 @echo off
-REM Iniciador sem console para Hxg_auto
+REM 🚀 Iniciador silencioso do Hxg_auto (interface Tkinter)
 
+REM Define diretório base (onde o BAT está salvo)
+cd /d "%~dp0"
+
+REM Caminhos absolutos
 set "BASE_DIR=%~dp0"
-set "PYTHONW=%BASE_DIR%..\app_py\Python313\Python313\pythonw.exe"
-set "SCRIPT=%BASE_DIR%..\app_py\main.py"
+set "PYTHONW=%BASE_DIR%Python313\pythonw.exe"
+set "UPDATER=%BASE_DIR%updater.py"
 
-if exist "%PYTHONW%" (
-    start "" "%PYTHONW%" "%SCRIPT%"
-) else (
-    echo [ERRO] pythonw.exe não encontrado em: "%PYTHONW%"
+REM ==========================
+REM   VERIFICAÇÕES BÁSICAS
+REM ==========================
+if not exist "%PYTHONW%" (
+    echo ❌ ERRO: Python nao encontrado em "%PYTHONW%"
     pause
     exit /b 1
 )
+
+if not exist "%UPDATER%" (
+    echo ❌ ERRO: updater.py nao encontrado em "%UPDATER%"
+    pause
+    exit /b 1
+)
+
+REM ==========================
+REM   EXECUÇÃO SILENCIOSA
+REM ==========================
+echo 🔄 Iniciando o atualizador (background)...
+
+REM Usa START para rodar sem travar o CMD e sem console
+start "" "%PYTHONW%" "%UPDATER%"
+
+REM Fecha imediatamente o CMD
 exit /b 0

@@ -3,36 +3,23 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Baixar - Auto_form</title>
-    <!-- Carrega Tailwind CSS e FontAwesome -->
+    <title>Baixar - Auto-Ficha-OPE</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     <style>
-        /* Configuração de fonte moderna */
-        body {
-            font-family: 'Inter', sans-serif;
-        }
-        /* Fundo com gradiente radial sutil */
-        .premium-bg {
-            background: radial-gradient(circle at 50% 50%, rgba(30, 41, 59, 1) 0%, rgba(15, 23, 42, 1) 100%);
-        }
-        /* Animação de pulsação mais suave para o ícone */
+        body { font-family: 'Inter', sans-serif; }
+        .premium-bg { background: radial-gradient(circle at 50% 50%, rgba(30,41,59,1) 0%, rgba(15,23,42,1) 100%); }
         @keyframes pulse-icon {
             0% { transform: scale(1); opacity: 0.8; }
             50% { transform: scale(1.05); opacity: 1; }
             100% { transform: scale(1); opacity: 0.8; }
         }
-        .animate-pulse-icon {
-            animation: pulse-icon 2s infinite ease-in-out;
-        }
+        .animate-pulse-icon { animation: pulse-icon 2s infinite ease-in-out; }
     </style>
 </head>
 <body class="premium-bg text-white min-h-screen flex flex-col items-center justify-center p-4">
 
-    <!-- Container Principal (Card Profissional Premium) -->
-    <div class="card-container bg-gray-800 p-8 md:p-12 rounded-3xl shadow-3xl max-w-lg w-full transition-all duration-500 ease-in-out border border-gray-700/50">
-
-        <!-- Título com Ícone e Animação -->
+    <div class="card-container bg-gray-800 p-8 md:p-12 rounded-3xl shadow-3xl max-w-lg w-full border border-gray-700/50">
         <div class="flex flex-col items-center justify-center mb-8">
             <i class="fa-solid fa-download text-6xl text-transparent bg-clip-text bg-gradient-to-r from-teal-400 to-cyan-500 mb-4 animate-pulse-icon"></i>
             <h1 class="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">
@@ -40,12 +27,10 @@
             </h1>
         </div>
         
-        <!-- Mensagem de Status -->
         <p class="text-gray-300 text-lg mb-6 text-center leading-relaxed">
-            O seu arquivo <strong class="font-extrabold text-teal-300">AUTO_FORM</strong> está sendo preparado para download.
+            O seu pacote <strong class="font-extrabold text-teal-300">Conf_app</strong> está sendo preparado para download.
         </p>
 
-        <!-- Progress Bar (Simulada) -->
         <div class="mb-8">
             <p id="progress-text" class="text-sm text-teal-400 mb-2 font-medium flex justify-between">
                 <span>Preparando Arquivo...</span>
@@ -55,87 +40,63 @@
                 <div id="progressBar" class="h-3 rounded-full transition-all duration-300 ease-out bg-gradient-to-r from-teal-500 to-cyan-600 shadow-lg shadow-teal-500/30" style="width: 0%"></div>
             </div>
         </div>
-        
-        <!-- O bloco de "Informação Importante" sobre o Antivírus foi removido daqui -->
 
-        <!-- Botão de Download Manual (Fallback) - Agora mais como um link secundário -->
         <p class="text-gray-400 text-sm mb-4 text-center">
             Se o processo não for concluído em 10 segundos, clique abaixo:
         </p>
-        <a id="manual-link" href="#" class="inline-flex items-center justify-center w-full px-8 py-3 text-base font-semibold text-teal-400 border border-teal-400 rounded-xl hover:bg-teal-400 hover:text-gray-900 transition-all duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-teal-400 focus:ring-offset-2 focus:ring-offset-gray-900">
+        <a id="manual-link" href="#" class="inline-flex items-center justify-center w-full px-8 py-3 text-base font-semibold text-teal-400 border border-teal-400 rounded-xl hover:bg-teal-400 hover:text-gray-900 transition-all duration-200 ease-in-out">
             <i class="fa-solid fa-link mr-2"></i>
             Iniciar Download Manualmente
         </a>
-
     </div>
 
-    <!-- Footer Simples -->
     <footer class="mt-8 text-xs text-gray-500">
-        <p>&copy; 2024 Hxg Auto. Todos os direitos reservados. Versão 1.2</p>
+        <p>&copy; 2025 Auto_form. Todos os direitos reservados.</p>
     </footer>
 
     <script>
-        // Link direto para o arquivo ZIP hospedado no GitHub
-        const zipUrl = "https://raw.githubusercontent.com/Kvsl11/Auto_form/main/auto_form_instalador.zip";
-        const fileName = "auto_form_instalador.zip";
+        // 🔹 URL para o arquivo ZIP da pasta Conf_app
+        const zipUrl = "https://raw.githubusercontent.com/Kvsl11/Auto_form/main/Conf_app.zip";
+        const fileName = "Conf_app.zip";
 
-        // 1. Define o link manual no botão
         const manualLinkElement = document.getElementById("manual-link");
         if (manualLinkElement) {
             manualLinkElement.href = zipUrl;
-            manualLinkElement.download = fileName; // Garante que o clique manual também force o download com o nome correto
+            manualLinkElement.download = fileName;
         }
 
-        // 2. Cria e dispara download automático
         function iniciarDownload() {
-            console.log("Tentando iniciar o download automático...");
+            console.log("Iniciando download automático...");
             const link = document.createElement("a");
             link.href = zipUrl;
             link.download = fileName;
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
-            console.log("Download automático disparado.");
-
-            // Oculta o indicador de progresso após o início do download
             const progressText = document.getElementById('progress-text');
             if (progressText) {
                 progressText.innerHTML = '<span class="text-green-400"><i class="fa-solid fa-circle-check mr-2"></i>Download Concluído!</span>';
             }
         }
 
-        // 3. Simula o progresso e executa automaticamente
         window.addEventListener("DOMContentLoaded", () => {
             const progressBar = document.getElementById('progressBar');
             const progressPercentage = document.getElementById('progress-percentage');
             let progress = 0;
-
             const interval = setInterval(() => {
-                // Aumenta o progresso de forma mais lenta no início e mais rápida no final
                 progress += (progress < 80) ? (Math.random() * 10) + 5 : (Math.random() * 2) + 1;
-                
                 if (progress > 100) progress = 100;
-                
-                // Atualiza a barra e a porcentagem na tela
                 progressBar.style.width = progress + '%';
                 progressPercentage.textContent = Math.floor(progress) + '%';
-                
-                // Atualiza o texto para mostrar que está pronto
                 if (progress > 95) {
-                    const progressText = document.getElementById('progress-text');
-                    progressText.querySelector('span:first-child').textContent = 'Finalizando Download...';
+                    document.getElementById('progress-text').querySelector('span:first-child').textContent = 'Finalizando Download...';
                 }
-
                 if (progress >= 100) {
                     clearInterval(interval);
-                    // Garante que o download seja disparado após a barra estar cheia
-                    setTimeout(() => {
-                        iniciarDownload();
-                    }, 500); 
+                    setTimeout(() => iniciarDownload(), 500);
                 }
             }, 200);
         });
-
     </script>
 </body>
 </html>

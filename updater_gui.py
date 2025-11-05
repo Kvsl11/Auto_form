@@ -1,9 +1,8 @@
 import os
 import requests
-import tkinter as tk
-from tkinter import messagebox
 import subprocess
 import ssl
+import time
 
 # --- Ignorar SSL corporativo (opcional para redes com proxy) ---
 ssl._create_default_https_context = ssl._create_unverified_context
@@ -26,7 +25,8 @@ PYTHON_EMBUTIDO = os.path.join(APP_DIR, "Python313", "python.exe")
 def get_remote_version():
     """Obtém a versão online do repositório GitHub."""
     try:
-        r = requests.get(BASE_URL + VERSION_FILE, timeout=8, verify=False)
+        headers = {"Cache-Control": "no-cache", "Pragma": "no-cache"}
+        r = requests.get(BASE_URL + VERSION_FILE, timeout=10, verify=False, headers=headers)
         if r.status_code == 200:
             return r.text.strip()
     except Exception as e:
@@ -48,48 +48,62 @@ def save_local_version(version):
 def download_main(version):
     """Baixa o novo main.py atualizado do GitHub."""
     try:
-        r = requests.get(BASE_URL + SCRIPT_FILE, timeout=15, verify=False)
+        print("⬇️ Baixando nova versão do main.py...")
+        headers = {"Cache-Control": "no-cache", "Pragma": "no-cache"}
+        r = requests.get(BASE_URL + SCRIPT_FILE, timeout=20, verify=False, headers=headers)
         r.raise_for_status()
         with open(LOCAL_SCRIPT, "wb") as f:
             f.write(r.content)
         save_local_version(version)
+        print(f"✅ Atualizado para versão {version}.")
         return True
     except Exception as e:
-        messagebox.showerror("Erro", f"⚠️ Falha ao baixar nova versão: {e}")
+        print(f"❌ Falha ao baixar nova versão: {e}")
         return False
 
 def iniciar_app():
     """Executa o app principal (usando o Python embutido, se existir)."""
-    if os.path.exists(PYTHON_EMBUTIDO):
-        subprocess.Popen([PYTHON_EMBUTIDO, LOCAL_SCRIPT])
-    else:
-        subprocess.Popen(["python", LOCAL_SCRIPT])
-    exit()
+    print("🚀 Iniciando o aplicativo principal...")
+    try:
+        if os.path.exists(PYTHON_EMBUTIDO):
+            subprocess.Popen(
+                [PYTHON_EMBUTIDO, LOCAL_SCRIPT],
+                creationflags=subprocess.DETACHED_PROCESS | subprocess.CREATE_NO_WINDOW
+            )
+        else:
+            subprocess.Popen(["python", LOCAL_SCRIPT])
+    except Exception as e:
+        print(f"❌ Erro ao iniciar o app: {e}")
+    finally:
+        os._exit(0)
 
 def check_update():
     """Verifica se há atualização e baixa automaticamente, se necessário."""
+    print("🔍 Verificando atualizações...")
     local_v = get_local_version()
     remote_v = get_remote_version()
 
+    print(f"Versão local: {local_v}")
+    print(f"Versão online: {remote_v}")
+
     if not remote_v:
-        messagebox.showwarning("Aviso", "⚠️ Não foi possível verificar a versão online.")
+        print("⚠️ Não foi possível verificar a versão online. Executando versão local.")
         iniciar_app()
         return
 
     if local_v != remote_v:
-        if messagebox.askyesno("Atualização disponível",
-                               f"Versão atual: {local_v}\nNova versão: {remote_v}\n\nDeseja atualizar agora?"):
-            if download_main(remote_v):
-                messagebox.showinfo("Sucesso", f"✅ Atualizado para a versão {remote_v} com sucesso!")
-            else:
-                messagebox.showerror("Erro", "Falha ao atualizar o aplicativo.")
+        print(f"🟡 Nova versão detectada ({remote_v}), iniciando atualização automática...")
+        if download_main(remote_v):
+            print("♻️ Reiniciando com a nova versão...")
+            time.sleep(1)
+            iniciar_app()
         else:
-            messagebox.showinfo("Ignorado", "🔹 Atualização ignorada pelo usuário.")
-
-    iniciar_app()
+            print("❌ Falha ao atualizar. Executando versão local.")
+            iniciar_app()
+    else:
+        print(f"🟢 Versão atual ({local_v}) já está atualizada.")
+        iniciar_app()
 
 # --- Execução principal ---
 if __name__ == "__main__":
-    root = tk.Tk()
-    root.withdraw()  # Oculta a janela principal
     check_update()

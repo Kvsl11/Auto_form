@@ -65,7 +65,7 @@ def apply_ssl_fix():
     except Exception:
         pass
 
-VERSAO = "1.0.2"
+VERSAO = "1.0.3"
 
 # URL padrão
 DEFAULT_FORM_URL = "https://docs.google.com/forms/d/e/1FAIpQLSfLyptmo3NFUx8dxC7k0obmQxAXPuimBLC_L30xgZOsygvqpg/viewform"
@@ -786,12 +786,41 @@ class MainWindow(QMainWindow):
 
 
 def main():
-    if not QApplication.instance():
-        app = QApplication(sys.argv)
-    else:
-        app = QApplication.instance()
-        
     apply_ssl_fix()
+
+    # --- Verifica atualização antes de iniciar a UI ---
+    repo_version_url = "https://raw.githubusercontent.com/Kvsl11/Auto_form/main/version.txt"
+    script_url = "https://raw.githubusercontent.com/Kvsl11/Auto_form/main/main.py"
+    local_path = os.path.abspath(sys.argv[0])
+
+    try:
+        print("🔄 Verificando atualizações automáticas...")
+        resp = requests.get(repo_version_url, timeout=8, verify=False)
+        resp.raise_for_status()
+        versao_online = resp.text.strip()
+
+        if versao_online != VERSAO:
+            print(f"🟡 Nova versão encontrada: {versao_online} (local: {VERSAO})")
+            print("⬇ Baixando atualização...")
+
+            r = requests.get(script_url, timeout=15, verify=False)
+            r.raise_for_status()
+
+            with open(local_path, "wb") as f:
+                f.write(r.content)
+
+            print(f"✅ Atualizado para v{versao_online}. Reiniciando o aplicativo...")
+            subprocess.Popen([sys.executable, local_path])
+            sys.exit(0)
+        else:
+            print(f"🟢 Aplicativo já está atualizado (v{VERSAO})")
+
+    except Exception as e:
+        print(f"⚠️ Falha ao verificar/baixar atualização: {e}")
+        print("➡️ Continuando com a versão atual.")
+
+    # --- Inicializa a interface após atualização ---
+    app = QApplication(sys.argv)
     window = MainWindow()
     window.show()
     sys.exit(app.exec())
