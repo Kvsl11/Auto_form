@@ -66,7 +66,7 @@ def apply_ssl_fix():
     except Exception:
         pass
 
-VERSAO = "1.1.0"
+VERSAO = "1.1.1"
 
 # URL padrão
 DEFAULT_FORM_URL = "https://docs.google.com/forms/d/e/1FAIpQLSfLyptmo3NFUx8dxC7k0obmQxAXPuimBLC_L30xgZOsygvqpg/viewform"
