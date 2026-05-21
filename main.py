@@ -66,7 +66,7 @@ def apply_ssl_fix():
     except Exception:
         pass
 
-VERSAO = "1.1.1"
+VERSAO = "1.1.2"
 
 # URL padrão
 DEFAULT_FORM_URL = "https://docs.google.com/forms/d/e/1FAIpQLSfLyptmo3NFUx8dxC7k0obmQxAXPuimBLC_L30xgZOsygvqpg/viewform"
@@ -286,7 +286,7 @@ class FormsWorker(QThread):
                     chrome_options.add_argument('--no-sandbox')
                     chrome_options.add_argument('--disable-dev-shm-usage')
 
-                self.driver = uc.Chrome(options=chrome_options, version_main=144)
+                self.driver = uc.Chrome(options=chrome_options, version_main=148)
                 try:
                     self.driver.maximize_window()
                 except Exception:
